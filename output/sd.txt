@@ -1,4 +1,0 @@
-Hello World
-Im file abc.txt
-And I will be read by the FileHandling class file
-and I will be written into "pqr.txt"	
