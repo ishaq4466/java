@@ -1,0 +1,385 @@
+/For master jenkins/
+
+from jenkins/jenkins:2.173
+
+# Distributed Builds plugins
+RUN /usr/local/bin/install-plugins.sh ssh-slaves
+
+# install Notifications and Publishing plugins
+RUN /usr/local/bin/install-plugins.sh email-ext
+RUN /usr/local/bin/install-plugins.sh mailer
+RUN /usr/local/bin/install-plugins.sh slack
+
+# Artifacts
+RUN /usr/local/bin/install-plugins.sh htmlpublisher
+
+# UI
+RUN /usr/local/bin/install-plugins.sh greenballs
+RUN /usr/local/bin/install-plugins.sh simple-theme-plugin
+
+# Scaling
+RUN /usr/local/bin/install-plugins.sh kubernetes
+RUN /usr/local/bin/install-plugins.sh groovy
+
+# install Maven
+USER root
+RUN apt-get update && apt-get install -y maven
+RUN apt-get install -y net-tools iputils-ping
+RUN apt-get install -y curl wget vim openssh-server sshpass
+USER jenkins
+
+/////////////////////////////////////////
+
+
+{"firstName":"Louis","PhoneNumber":{"StreetAddress":"21nd Street","city":"New York","state":"NY"},"LastName":"Phillipes","Age":"75"}
+
+def curl_url=['bash','-c',"curl - GET www.google.com"]
+printf(curl_url)
+Process getProjectDetailProc=curl_url.execute()
+printf(getProjectDetailProc.text)
+
+
+println("Hello World dude im from\n")
+println(curl_url)
+
+Process getProjectDetailProc=curl_url.execute()
+println(getProjectDetailProc.text)
+println("Dode dude\n")
+
+
+def curl_url=['bash','-c','/usr/bin/curl',' -X',' GET'," www.google.com"]
+
+println("Hello World");
+def curl_url=['bash','-c',"ls /usr/bin"]
+println(curl_url)
+def sout = new StringBuilder(), serr = new StringBuilder()
+def proc = curl_url.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println "out>>> $sout err> $serr"
+
+def curl_url=['bash','-c',"wget -O- www.google.com"]
+
+
+println("Hello World");
+def curl_url=['bash','-c',"curl -X GET www.google.com"]
+println(curl_url)
+def sout = new StringBuilder(), serr = new StringBuilder()
+def proc = curl_url.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println "out>>> $sout err> $serr"
+
+
+def sout = new StringBuilder(), serr = new StringBuilder()
+def proc = 'ls /badDir'.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println "out> $sout err> $serr"
+
+
+
+/
+alias k="kubectl"
+git clone https://github.com/ishaq4466/JenkinsOnKubernetes
+k cluster-info | grep master
+
+cd JenkinsOnKubernetes/without*
+for x in `ls -I *.md -I *.groovy -I Dockerfile`
+do
+k apply -f $x
+done
+
+/
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+  redis:
+    image: "redis:alpine"
+
+FROM python:3.7-alpine
+WORKDIR /code
+ENV FLASK_APP app.py
+ENV FLASK_RUN_HOST 0.0.0.0
+RUN apk add --no-cache gcc musl-dev linux-headers
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["flask", "run"]
+/
+
+
+
+
+
+/
+-Dorg.csanchez.jenkins.plugins.kubernetes.pipeline.PodTemplateStepExecution.defaultImage=smartbuddy/jenkky-slave:1.0
+
+-Dorg.csanchez.jenkins.plugins.kubernetes.pipeline.PodTemplateStepExecution.defaultImage=warfox/jnlp-slave-python-3
+
+-Dorg.csanchez.jenkins.plugins.kubernetes.pipeline.PodTemplateStepExecution.defaultImage=nandu96/jenkins-slave:1.2
+-Dorg.csanchez.jenkins.plugins.kubernetes.pipeline.PodTemplateStepExecution.defaultImage=nandu96/jenkins-slave:1.2
+jenkins-master:1.2
+
+docker pull warfox/jnlp-slave-python-3
+/
+ARG BASEIMAGE=openjdk:8-jdk
+FROM ${BASEIMAGE}
+ 
+# this image assumes compatible version of JAVA has been installed
+ 
+# copied from jenkins/slave
+ENV HOME=/home/jenkins
+RUN groupadd -g 10000 jenkins
+RUN useradd -c "My jenkins user" -d $HOME -u 10000 -g 10000 -s /bin/bash -m jenkins
+ 
+ARG JENKINS_SLAVE_VERSION=3.16
+ARG AGENT_WORKDIR=/home/jenkins/agent
+
+curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VERSION}/remoting-${JENKINS_SLAVE_VERSION}.jar 
+chmod 755 /usr/share/jenkins
+chmod 644 /usr/share/jenkins/slave.jar
+
+mkdir /home/jenkins/.jenkins && mkdir -p ${AGENT_WORKDIR}
+cp jenkins-slave /usr/local/bin/jenkins-slave
+
+
+
+
+RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://r...content-available-to-author-only...i.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VERSION}/remoting-${JENKINS_SLAVE_VERSION}.jar \
+  && chmod 755 /usr/share/jenkins \
+  && chmod 644 /usr/share/jenkins/slave.jar \
+  && chown 10000:10000 /usr/bin/curl 
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ENV SHELL="bin/bash"
+
+USER jenkins
+ENV AGENT_WORKDIR=${AGENT_WORKDIR}
+RUN mkdir /home/jenkins/.jenkins && mkdir -p ${AGENT_WORKDIR}
+ 
+VOLUME /home/jenkins/.jenkins
+VOLUME ${AGENT_WORKDIR}
+WORKDIR /home/jenkins
+ 
+# copied from jenkins/jnlp-slave
+# some env-vars are reserved by jenkins-slave see the script for detail
+COPY jenkins-slave /usr/local/bin/jenkins-slave
+ENTRYPOINT ["jenkins-slave"]
+
+
+/
+HOME /home/jenkins
+
+
+
+
+/
+$ docker run -it --rm --entrypoint /bin/bash --user jenkins smartbuddy/js:1.3 -c "ls -l /usr/local/bin/"
+docker run -it --entrypoint /bin/bash --user root smartbuddy/jenkky-slave:1.0
+\
+docker run -it --name cc1 openjdk:8-jdk /bin/bash
+
+docker run -it --name cc2 smartbuddy/jenkky-slave:1.0 /bin/bash
+/
+
+
+
+
+tmux config file
+
+#################################
+# Initial setup
+set -g default-terminal xterm-256color
+set -g status-keys vi
+
+
+# Prefix
+set-option -g prefix C-a
+unbind-key C-a
+bind-key C-a send-prefix
+set -g base-index 1
+
+
+# Easy config reload
+bind-key R source-file ~/.tmux.conf \; display-message "tmux.conf reloaded."
+
+
+
+# Set easier window split keys
+bind-key v split-window -h
+bind-key h split-window -v
+
+
+# Easy clear history
+bind-key L clear-history
+
+# Use Alt-arrow keys without prefix key to switch panes
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+
+
+# Shift arrow to switch windows
+bind -n S-Left  previous-window
+bind -n S-Right next-window
+
+
+# Mouse Mode
+set -g mouse on
+
+bind-key r rename-pane
+
+
+
+#####################
+# Lengthen the amount of time status messages are displayed
+set-option -g display-time 2000
+set-option -g display-panes-time 3000
+
+
+# Set the base-index to 1 rather than 0
+set -g base-index 1
+set-window-option -g pane-base-index 1
+
+
+# Automatically set window title
+set-window-option -g automatic-rename on
+set-option -g set-titles on
+
+
+# Key bindings for copy-paste
+setw -g mode-keys vi
+unbind p
+bind p paste-buffer
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'y' copy-selection
+set-option -g renumber-windows on
+
+
+# Window activity monitor
+setw -g monitor-activity on
+set -g visual-activity on
+
+
+
+
+# Allow the arrow key to be used immediately after changing windows.
+set-option -g repeat-time 0
+
+
+
+# Double press <prefix> to move to last window
+bind-key C-b last-window
+
+# No delay for escape key press
+set -sg escape-time 0
+
+
+# Window activity monitor
+setw -g monitor-activity on
+set -g visual-activity on
+
+
+# Theme
+set -g window-status-current-bg green
+set -g window-status-current-fg black
+set -g window-status-current-attr bold
+set-option -g message-bg colour237
+set-option -g message-fg colour231
+set-option -g pane-border-fg green
+set-option -g pane-active-border-fg green
+
+# Status Bar
+set -g status-justify centre
+set -g status-bg black
+set -g status-fg white
+set -g status-interval 60
+set -g status-left-length 30
+set -g status-left '#[fg=green][#S] #(whoami)@#H'
+set -g status-right '#[fg=green]#(cut -d " " -f 1-3 /proc/loadavg)#[default]  #[fg=green]%H:%M'
+
+
+
+
+
+
+
+/
+packman 
+pacman -S tmux
+localedef -f UTF-8 -i en_US en_US.UTF-8
+wget https://pastebin.com/raw/J5TBUzk7
+cat J5TBUzk7 | tr -d '\r' > .tmux.conf
+mv J5TBUzk7 ~/.tmux.conf
+. ~/.tmux.conf
+
+
+
+
+/
+  kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: jenkins-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100M
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: jenkins
+  name: jenkins-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100M
+---
+
+
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+        - name: jenkin-master
+          image: smartbuddy/jenkins-master:1.0
+          env:
+            - name: JAVA_OPTS
+              value: -Djenkins.install.runSetupWizard=false
+          ports:
+            - name: http-port
+              containerPort: 8080
+            - name: jnlp-port
+              containerPort: 50000
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+	  volumes:
+		- name: jenkins-pv-claim
+		  persistentVolumeClaim:
+		  	claimName: jenkins-pv-claim
