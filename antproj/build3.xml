@@ -1,0 +1,57 @@
+<project name="HelloWorld" basedir="." default="main">
+
+<property name="srcDir" value="src" />
+<property name="buildDir" value="build" />
+<property name="classesDir" value="${buildDir}/classes" />
+<property name="jarDir" value="${buildDir}/jars" />
+<property name="main-class" value="main.Hello" />
+<property name="libPath" value="lib" />
+
+
+<path id="classpath">
+	<fileset dir="${libPath}" includes="**/*.jar" />
+</path>
+
+
+<target name="clean">
+	<delete dir="build" />
+	<mkdir dir="build" />
+	<mkdir dir="${classesDir}" />
+	<mkdir dir="${jarDir}" />
+</target>
+
+<target name="compile">
+	<javac srcdir="${srcDir}" classpathref="classpath" includeantruntime="false" destdir="${classesDir}" />
+
+</target>
+
+<echo message="My message ${basedir}" />
+<target name="jar">
+	<jar destfile="${jarDir}/HelloWorld.jar" basedir="${classesDir}"> 
+	<manifest>
+		<attribute name="main-class" value="${main-class}"/>
+	</manifest>
+	</jar>
+</target>
+
+<target name="run">
+	<java fork="false" classname="${main-class}">
+		<classpath>
+				<path refid="classpath"/>
+				<path location="${jarDir}/HelloWorld.jar" />
+		</classpath>
+	</java>
+</target>
+<!--Running the main class through jar
+<target name="run">
+	<java jar="${jarDir}/${ant.project.name}" fork="true">
+		<arg value="args1"/>
+	</java> 
+</target> -->
+
+
+
+
+<target name="main" depends="clean,compile,jar,run" />
+</project>
+

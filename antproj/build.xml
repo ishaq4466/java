@@ -1,0 +1,5 @@
+<project name="HelloWorld" basedir="." >
+<!--ant -Dname=smartbuddy-->
+<echo message="Name: ${name}" />
+
+</project>

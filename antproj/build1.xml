@@ -1,0 +1,29 @@
+<project name="HelloWorld" basedir="." default="main">
+
+<property name="srcDir" value="src" />
+<property name="buildDir" value="build" />
+<property name="classesDir" value="${buildDir}/classes" />
+<property name="jarDir" value="${buildDir}/jars" />
+<property name="main-class" value="main.Hello" />
+<property name="libPath" value="lib" />
+
+
+<path id="classpath">
+	<fileset dir="libPath" includes="**/*.jar" />
+</path>
+
+
+<target name="clean">
+	<delete dir="build" />
+	<mkdir dir="build" />
+	<mkdir dir="${classesDir}" />
+	<mkdir dir="${jarDir}" />
+</target>
+
+<target name="compile">
+	<javac srcdir="${srcDir}" classpathref="classpath" includeantruntime="false" destdir="${classesDir}" />
+</target>
+
+<target name="main" depends="compile" />
+</project>
+
