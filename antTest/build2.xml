@@ -5,11 +5,6 @@
 <property name="classes.dir" value="${build.dir}/classes" />
 <property name="jar.dir" value="${build.dir}/jars" />
 <property name="main-class" value="main.Hello" />
-<property name="lib.dir" value="lib"/>
-
-<path id="classpath">
-        <fileset dir="${lib.dir}" includes="**/*.jar"/>
-</path>
 
 
 
@@ -19,28 +14,22 @@
 
 <target name="compile">
 	<mkdir dir="${classes.dir}" />
-	<javac srcdir="${src.dir}" includeantruntime="false" destdir="${classes.dir}" classpathref="classpath" />
+	<javac srcdir="${src.dir}" includeantruntime="false" destdir="${classes.dir}" />
 </target>
-
-
 
 <target name="jar">
 	<jar destfile="${jar.dir}/HelloWorld.jar" basedir="${classes.dir}">
 		<manifest>
 			<attribute name="main-class" value="${main-class}" />
 		</manifest>
+
 	</jar>
 </target>
 
 <target name="run">
-
-<java fork="true" classname="${main-class}">
-            <classpath>
-                <path refid="classpath"/>
-                <path location="${jar.dir}/${ant.project.name}.jar"/>
-            </classpath>
-</java>
-	]
+	<java jar="${jar.dir}/HelloWorld.jar" fork="true">
+		<arg line="ep747"/>
+	</java>
 </target>
 <target name="main" depends="compile,jar,run"/>
 
